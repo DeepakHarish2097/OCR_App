@@ -1,0 +1,23 @@
+ISA*00*          *00*          *ZZ*13202          *29*NYB005058      *190828*2253*^*00501*924000997*0*P*:~
+GS*HP*13202*NYB005058*{date}**997*X*005010X221A1~
+ST*835*000000001~
+BPR*I*11.91*C*CHK************{date}~
+TRN*1*ZZZZZZZZ*ZZZZZZZZZZ~
+N1*PR*{from_address_line_1}*~
+N3*{from_address_line_2}**~
+N4*{from_address_line_3}~
+PER*BL*EDI Support*TE*2159914290*EM*EDI@HEALTHPART.COM~
+N1*PE*{to_address_line_1}*FI*ZZZZZZZZZZ~
+N3*{to_address_line_2}*~
+N4*{to_address_line_3}*~
+LX*1~
+CLP*Z-ZZZZZZZZZ*1*{billed}*{allowed}*{adj}**ZZZZZZZZZZZZZZZZZZZZ**1~
+NM1*QC*1*ZZZZZZZZ*ZZZZ****MI*ZZZZZZZZZZZZ*~
+SVC*HC:{proc}*{billed}*{allowed}**1~
+DTM*472*{to_date}~
+CAS*CO*45*{disallowed}~
+REF*6R*1~
+AMT*B6*{billed}~
+SE*19*000000001~
+GE*1*997~
+IEA*1*924000997~
