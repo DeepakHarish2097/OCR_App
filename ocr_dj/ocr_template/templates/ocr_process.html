@@ -98,6 +98,11 @@
 </div>
 <div class="row">
     <div class="col-2" style="background-color: #818181;">
+        <div class="d-flex justify-content-center m-2">
+          <div class="spinner-border" role="status" id="image-lists-spinner" style="display: none">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
         <ol id="image-lists">
         </ol>
     </div>
@@ -105,10 +110,22 @@
         <div class="container" style="padding-top: 10px;">
             <div class="row">
                 <div class="col-6">
+                  <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status" id="image-crop-spinner" style="display: none">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
                     <img id="imgToCrop" class="img-fluid" src="" alt="">
                 </div>
-                <div class="col-4" id="cards-list" style="margin-left: 10px;">
+              <div class="col-4">
+                <div class="d-flex justify-content-center">
+                  <div class="spinner-border text-primary" role="status" id="cards-lists-spinner" style="display: none">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
                 </div>
+                <div id="cards-list" style="margin-left: 10px;">
+                </div>
+              </div>
             </div>
         </div>
     </div>
@@ -212,6 +229,9 @@
 
     $('form#temp-form').submit(function(e) {
         e.preventDefault();
+        document.getElementById("image-lists-spinner").style.display = "block";
+        document.getElementById("image-crop-spinner").style.display = "block";
+        document.getElementById("cards-lists-spinner").style.display = "block";
         let formData = new FormData(this);
         document.getElementById("cards-list").innerHTML = "";
         $("#image-lists").empty();
@@ -220,6 +240,9 @@
             url: "{% url 'process_images' %}",
             data: formData,
             success: function(response){
+                document.getElementById("image-lists-spinner").style.display = "none";
+                document.getElementById("image-crop-spinner").style.display = "none";
+                document.getElementById("cards-lists-spinner").style.display = "none";
                 let pages = response.img_url;
                 genText = response.data;
                 currentPdfProcessId = response.pdf_id;

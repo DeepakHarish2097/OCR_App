@@ -257,7 +257,7 @@ def set_data(request):
 
 def login_page(request):
     if request.user.is_authenticated:
-        return redirect('template')
+        return redirect('home')
     else:
         if request.method == 'POST':
             username = request.POST.get('username')
@@ -265,7 +265,7 @@ def login_page(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('template')
+                return redirect('home')
             else:
                 messages.info(request, 'Username OR password is incorrect')
 
@@ -279,7 +279,7 @@ def log_out(request):
 
 def register_page(request):
     if request.user.is_authenticated:
-        return redirect('template')
+        return redirect('home')
     else:
         if request.method == "POST":
             password1 = request.POST.get('password1')
@@ -333,11 +333,11 @@ def preview_data(request):
                     h = cord.height
                     cropped_img = image[y:y + h, x:x + w]
                     text = pytesseract.image_to_string(cropped_img)
-                    img_save_file = os.path.join(img_save_path, f"{num}.jpeg")
-                    cv2.imwrite(img_save_file, cropped_img)
-                    img_save_file = f"/media/preview_images/{str(temp_id)}/{num}.jpeg"
+                    # img_save_file = os.path.join(img_save_path, f"{num}.jpeg")
+                    # cv2.imwrite(img_save_file, cropped_img)
+                    # img_save_file = f"/media/preview_images/{str(temp_id)}/{num}.jpeg"
                     data.append({
-                        "path": img_save_file,
+                        # "path": img_save_file,
                         "code": cord.caption,
                         "text": text
                     })
@@ -346,5 +346,9 @@ def preview_data(request):
         return JsonResponse({"data": data})
 
 
-# TODO Datetime validation
+@login_required(login_url="login")
+def home_page(request):
+    return render(request, 'home_page.html')
+
+
 # TODO onbeforeunload in js

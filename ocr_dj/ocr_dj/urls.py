@@ -7,12 +7,12 @@ from ocr_template.views import (
     create_template, update_template_file, create_temp_coord,
     delete_cord, process_page, process_images, download_file,
     set_data, login_page, log_out, register_page, get_cord_values,
-    preview_data)
+    preview_data, home_page)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', template_creation, name='template'),
+    path('template', template_creation, name='template'),
     path('get_pdf_temps/', get_pdf_templates, name='get_pdf_temps'),
     path('get_temp_details/', get_template_details, name='get_temp_details'),
     path('create_template/', create_template, name='create_template'),
@@ -28,6 +28,8 @@ urlpatterns = [
     path('register/', register_page, name='register'),
     path('get_cord_values/', get_cord_values, name='get_cord_values'),
     path('preview_data/', preview_data, name='preview_data'),
+    path('home/', home_page, name='home'),
+    path('', home_page, name='home'),
 ]
 
 if settings.DEBUG:

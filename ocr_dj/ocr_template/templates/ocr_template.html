@@ -71,15 +71,19 @@
             <div class="modal-body">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="template-name">
-                    <label for="floatingInput">Template name</label>
+                    <label for="template-name">Template name</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="number" class="form-control" id="template-total-pages">
-                    <label for="floatingInput">No. of Pages</label>
+                    <label for="template-total-pages">No. of Pages</label>
                 </div>
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="template-output">
-                    <label for="floatingInput">Output Format</label>
+                    <select class="form-select" id="template-output" aria-label="Default select example">
+                      <option selected value=""></option>
+                      <option value=".835">.835</option>
+                      <option value=".json">JSON</option>
+                    </select>
+                    <label for="template-output">Output Format</label>
                 </div> 
             </div>
             <div class="modal-footer">
@@ -96,7 +100,12 @@
         <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" style="align-content: center">
+      <div class="modal-body" style="align-content: center; height: 600px;">
+        <div class="d-flex justify-content-center">
+          <div class="spinner-border text-primary" role="status" id="preview-spinner" style="display: none">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
         <div id="preview-lists" class="row row-cols-1 row-cols-md-3 g-4">
         </div>
       </div>
@@ -108,6 +117,11 @@
 </div>
 <div class="row">
     <div class="col-2" style="background-color: #818181;">
+        <div class="d-flex justify-content-center m-2">
+          <div class="spinner-border" role="status" id="image-lists-spinner" style="display: none">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
         <ol id="image-lists">
         </ol>
     </div>
@@ -115,6 +129,11 @@
         <div class="container" style="padding-top: 10px;">
             <div class="row">
                 <div class="col-6">
+                  <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status" id="image-crop-spinner" style="display: none">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
                     <img id="imgToCrop" class="img-fluid" src="" alt="">
                 </div>
                 <div class="col-auto" style="margin-left: 10px;">
@@ -469,12 +488,16 @@
 
     $('form#temp-form').submit(function(e) {
         e.preventDefault();
+        document.getElementById("image-lists-spinner").style.display = "block";
+        document.getElementById("image-crop-spinner").style.display = "block";
         let formData = new FormData(this);
         $.ajax({
             type: "POST",
             url: "{% url 'update_template' %}",
             data: formData,
             success: function(response){
+                document.getElementById("image-lists-spinner").style.display = "none";
+                document.getElementById("image-crop-spinner").style.display = "none";
                 $("#image-lists").empty();
                 let pages = response.pdf_pages;
                 setImageLists(pages);
@@ -512,6 +535,7 @@
 
     $("#preview-data").click(function (e) {
         e.preventDefault();
+        document.getElementById("preview-spinner").style.display = "block";
         $("#preview-lists").empty();
         $.ajax({
             type: "POST",
@@ -523,9 +547,9 @@
             success: function (response) {
                 let data = response.data;
                 for (let key in data) {
-                    let imgTag = document.createElement("img");
-                    imgTag.src = data[key].path;
-                    imgTag.className = "card-img-top";
+                    {#let imgTag = document.createElement("img");#}
+                    {#imgTag.src = data[key].path;#}
+                    {#imgTag.className = "card-img-top";#}
 
                     let cardHeader = document.createElement("h5");
                     cardHeader.className = "card-header";
@@ -542,14 +566,14 @@
                     let card = document.createElement("div");
                     card.className = "card border-dark mb-3";
                     card.style.width = "100%";
-                    card.append(imgTag);
+                    {#card.append(imgTag);#}
                     card.append(cardHeader);
                     card.append(cardBody);
 
                     let colTag = document.createElement("div");
                     colTag.className = "col";
                     colTag.append(card);
-
+                    document.getElementById("preview-spinner").style.display = "none";
                     $("#preview-lists").append(colTag);
                 }
             },
