@@ -1,38 +1,49 @@
 {% extends 'base.html' %}
 {% block content %}
-{% load static %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
-<div class="container">
+  {% load static %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+  <div class="container">
     <form id="temp-form" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <h3 class="mt-3">Templates</h3>
-        <div class="row g-3 mt-2">
-            <div class="col-sm-7">
-                <div class="row">
-                    <div class="col-auto">
-                        <button type="button" class="btn btn-primary" id="add-template" data-bs-toggle="modal" data-bs-target="#template-table">Select Template</button>
-                    </div>
-                    <div class="col">
-                        <p id="temp-name" name="temp_name"></p>
-                        <input type="text" name="temp_id" style="display: none;" id="temp-id">
-                    </div>
-                </div>
+      {% csrf_token %}
+      <h3 class="mt-3">Templates</h3>
+      <div class="row g-3 mt-2">
+        <div class="col-sm-6">
+          <div class="row">
+            <div class="col-auto">
+              <button type="button" class="btn btn-primary" id="add-template" data-bs-toggle="modal"
+                      data-bs-target="#template-table">Select Template
+              </button>
             </div>
             <div class="col-auto">
-                <input class="form-control form-control-sm" name="pdf_file" id="pdfInput" type="file">
-                <label for="pdfInput" class="form-label">PDF Upload</label>
+              <p id="temp-name"></p>
+              <input type="text" name="temp_id" style="display: none;" id="temp-id">
             </div>
-            <div class="col-auto">
-                <button type="submit" id="post-data" class="btn btn-primary">Load</button>
-            </div>
-            <div class="col-auto">
-                <button type="button" id="preview-data" style="display: none;" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#previewModel">Preview</button>
-            </div>
+          </div>
         </div>
+        <div class="col-auto">
+          <div class="row">
+            <div class="col-auto">
+              <label for="pdfInput" class="form-label">PDF Upload</label>
+            </div>
+            <div class="col">
+              <input class="form-control form-control-sm" name="pdf_file" id="pdfInput" type="file">
+            </div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <button type="submit" id="post-data" class="btn btn-primary">Load</button>
+        </div>
+        <div class="col-auto">
+          <button type="button" id="preview-data" style="display: none;" class="btn btn-outline-primary"
+                  data-bs-toggle="modal" data-bs-target="#previewModel">Preview
+          </button>
+        </div>
+      </div>
     </form>
-</div>
-<div class="modal-lg modal fade" id="template-table" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="templateTableLabel" aria-hidden="true">
+  </div>
+  <div class="modal-lg modal fade" id="template-table" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+       aria-labelledby="templateTableLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
@@ -40,559 +51,643 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Template Name</th>
-                        <th scope="col">Pages</th>
-                        <th scope="col">Output Format</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="template-lists" style="height: 100px; overflow-y: auto; overflow-x: hidden;">
-                </tbody>
-            </table>
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th scope="col">Template Name</th>
+              <th scope="col">Pages</th>
+              <th scope="col">Output Format</th>
+              <th></th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody id="template-lists" style="height: 100px; overflow-y: auto; overflow-x: hidden;">
+            </tbody>
+          </table>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" id="create-template-modal" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#create-template">Create New Template</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="create-template-modal" data-bs-toggle="modal"
+                  data-bs-dismiss="modal" data-bs-target="#create-template">Create New Template
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
-      </div>
-    </div>
-</div>
-<div class="modal fade" id="create-template" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Create New Template</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="template-name">
-                    <label for="template-name">Template name</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="number" class="form-control" id="template-total-pages">
-                    <label for="template-total-pages">No. of Pages</label>
-                </div>
-                <div class="form-floating">
-                    <select class="form-select" id="template-output" aria-label="Default select example">
-                      <option selected value=""></option>
-                      <option value=".835">.835</option>
-                      <option value=".json">JSON</option>
-                    </select>
-                    <label for="template-output">Output Format</label>
-                </div> 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="save-template" data-bs-dismiss="modal">Save Template</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="previewModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" style="align-content: center; height: 600px;">
-        <div class="d-flex justify-content-center">
-          <div class="spinner-border text-primary" role="status" id="preview-spinner" style="display: none">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-        <div id="preview-lists" class="row row-cols-1 row-cols-md-3 g-4">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
-</div>
-<div class="row">
-    <div class="col-2" style="background-color: #818181;">
-        <div class="d-flex justify-content-center m-2">
-          <div class="spinner-border" role="status" id="image-lists-spinner" style="display: none">
-            <span class="visually-hidden">Loading...</span>
+  <div class="modal fade" id="create-template" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+       aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Create New Template</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="template-name">
+            <label for="template-name">Template name</label>
+          </div>
+          <div class="form-floating mb-3" style="display: none">
+            <input type="number" class="form-control" id="template-total-pages" value="6">
+            <label for="template-total-pages">No. of Pages</label>
+          </div>
+          <div class="form-floating">
+            <select class="form-select" id="template-output" aria-label="Default select example">
+              <option selected value=".835">.835</option>
+              <option value=".json">JSON</option>
+{#              <option value=".csv">CSV</option>#}
+            </select>
+            <label for="template-output">Output Format</label>
           </div>
         </div>
-        <ol id="image-lists">
-        </ol>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="save-template" data-bs-dismiss="modal">Save Template
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="previewModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="align-content: center; height: 600px;">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-primary" role="status" id="preview-spinner" style="display: none">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <div id="preview-lists" class="row row-cols-1 row-cols-md-3 g-4">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-2" style="background-color: #818181;">
+      <div class="d-flex justify-content-center m-2">
+        <div class="spinner-border" role="status" id="image-lists-spinner" style="display: none">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <ol id="image-lists">
+      </ol>
     </div>
     <div class="col-10" style="background-color: #f2f2f2;">
-        <div class="container" style="padding-top: 10px;">
-            <div class="row">
-                <div class="col-6">
-                  <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-primary" role="status" id="image-crop-spinner" style="display: none">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                  </div>
-                    <img id="imgToCrop" class="img-fluid" src="" alt="">
-                </div>
-                <div class="col-auto" style="margin-left: 10px;">
-                    <button type="button" id="crop-btn" class="btn btn-primary mb-2" style="width: 100%;">Capture Position</button>
-                    <div class="row">
-                        <div class="col">
-                            <input class="form-control mb-2" id="x-value" type="text" value="X : " disabled readonly>
-                        </div>
-                        <div class="col">
-                            <input class="form-control mb-2" id="y-value" type="text" value="Y : " disabled readonly>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <input class="form-control mb-2" id="w-value" type="text" value="Width : " disabled readonly>
-                        </div>
-                        <div class="col">
-                            <input class="form-control mb-2" id="h-value" type="text" value="Height : " disabled readonly>
-                        </div>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="text" name="caption_name" class="form-control" id="captionInput" placeholder="Template" aria-label="Template">
-                        <label for="captionInput">Caption</label>
-                    </div>
-                    <div class="row">
-                      <div class="col">
-                        <div class="form-floating mb-3">
-                            <input type="text" name="code_name" class="form-control" id="codeInput" placeholder="Template" aria-label="Template">
-                            <label for="codeInput">Code</label>
-                        </div>
-                      </div>
-                      <div class="col">
-                        <div class="form-floating mb-3">
-                          <select class="form-select" id="field-type" name="field_type" aria-label="Default select example">
-                            <option selected value="0"></option>
-                            <option value="1">Number</option>
-                            <option value="2">Decimal</option>
-                            <option value="3">String</option>
-                            <option value="4">Date</option>
-                          </select>
-                          <label for="field-type">Field Type</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row" id="dateFormat">
-                      <div class="col" style="display: none" id="inCol">
-                        <div class="form-floating mb-3">
-                            <select class="form-select" id="inFormat" name="in_format" aria-label="Default select example">
-                              <option selected value="%m/%d/%Y">mm/dd/yyyy</option>
-                              <option value="%m/%d/%y">mm/dd/yy</option>
-                              <option value="%Y%m%d">yyyymmdd</option>
-                            </select>
-                            <label for="inFormat">Input Format</label>
-                        </div>
-                      </div>
-                      <div class="col" style="display: none" id="outCol">
-                        <div class="form-floating mb-3">
-                          <select class="form-select" id="outFormat" name="out_format" aria-label="Default select example">
-                            <option selected value="%m/%d/%Y">mm/dd/yyyy</option>
-                            <option value="%m/%d/%y">mm/dd/yy</option>
-                            <option value="%Y%m%d">yyyymmdd</option>
-                          </select>
-                          <label for="outFormat">Output Format</label>
-                        </div>
-                      </div>
-                    </div>
-                    <button type="button" id="add-btn" class="btn btn-primary mb-2" style="width: 100%;">Add to Template</button>
-                    <div id="add-cards">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Caption</th>
-                                    <th scope="col">Code</th>
-                                    <th scope="col">Page</th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-body-content"></tbody>
-                        </table>
-                    </div>
-                </div>
+      <div class="container" style="padding-top: 10px;">
+        <div class="row">
+          <div class="col-6">
+            <div class="d-flex justify-content-center">
+              <div class="spinner-border text-primary" role="status" id="image-crop-spinner" style="display: none">
+                <span class="visually-hidden">Loading...</span>
+              </div>
             </div>
+            <img id="imgToCrop" class="img-fluid" src="" alt="">
+          </div>
+          <div class="col-auto" style="margin-left: 10px;">
+            <button type="button" id="crop-btn" class="btn btn-primary mb-2" style="width: 100%;">Capture Position
+            </button>
+            <div class="row">
+              <div class="col">
+                <input class="form-control mb-2" id="x-value" type="text" value="X : " disabled readonly>
+              </div>
+              <div class="col">
+                <input class="form-control mb-2" id="y-value" type="text" value="Y : " disabled readonly>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <input class="form-control mb-2" id="w-value" type="text" value="Width : " disabled readonly>
+              </div>
+              <div class="col">
+                <input class="form-control mb-2" id="h-value" type="text" value="Height : " disabled readonly>
+              </div>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" name="caption_name" class="form-control" id="captionInput" placeholder="Template"
+                     aria-label="Template">
+              <label for="captionInput">Caption</label>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <input type="text" name="code_name" class="form-control" id="codeInput" placeholder="Template"
+                         aria-label="Template">
+                  <label for="codeInput">Code</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-floating mb-3">
+                  <select class="form-select" id="field-type" name="field_type" aria-label="Default select example">
+                    <option selected value="0"></option>
+                    <option value="1">Number</option>
+                    <option value="2">Decimal</option>
+                    <option value="3">String</option>
+                    <option value="4">Date</option>
+                  </select>
+                  <label for="field-type">Field Type</label>
+                </div>
+              </div>
+            </div>
+            <div class="row" id="dateFormat">
+              <div class="col" style="display: none" id="inCol">
+                <div class="form-floating mb-3">
+                  <select class="form-select" id="inFormat" name="in_format" aria-label="Default select example">
+                    <option selected value="%m/%d/%Y">mm/dd/yyyy</option>
+                    <option value="%m/%d/%y">mm/dd/yy</option>
+                    <option value="%Y%m%d">yyyymmdd</option>
+                  </select>
+                  <label for="inFormat">Input Format</label>
+                </div>
+              </div>
+              <div class="col" style="display: none" id="outCol">
+                <div class="form-floating mb-3">
+                  <select class="form-select" id="outFormat" name="out_format" aria-label="Default select example">
+                    <option selected value="%m/%d/%Y">mm/dd/yyyy</option>
+                    <option value="%m/%d/%y">mm/dd/yy</option>
+                    <option value="%Y%m%d">yyyymmdd</option>
+                  </select>
+                  <label for="outFormat">Output Format</label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="form-check mb-2" id="detailFieldDiv">
+                  <input class="form-check-input" type="checkbox" id="detailField">
+                  <label class="form-check-label" for="detailField">
+                    Detail Field
+                  </label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-check mb-2" id="captureHeightCheckDiv">
+                  <input class="form-check-input" type="checkbox" id="captureHeightCheck">
+                  <label class="form-check-label" for="captureHeightCheck">
+                    Capture Height
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-2">
+              <div class="col-auto">
+                <button type="button" id="heightCaptureButton" class="btn btn-outline-primary mb-2" style="display: none">Capture Height</button>
+              </div>
+              <div class="col">
+                <input class="form-control mb-2" id="hd-value" type="text" value="Height Difference : " disabled readonly style="display: none">
+              </div>
+            </div>
+            <button type="button" id="add-btn" class="btn btn-primary mb-2" style="width: 100%;">Add to Template
+            </button>
+            <div id="add-cards">
+              <table class="table table-hover">
+                <thead>
+                <tr>
+                  <th scope="col">Caption</th>
+                  <th scope="col">Code</th>
+                  <th scope="col">Page</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody id="table-body-content"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-<script>
-    const crop_btn = document.getElementById('crop-btn');
-    const add_btn = document.getElementById('add-btn');
-    let currentFile = null;
-    let cropper = null;
-    let codeInput = document.getElementById('codeInput');
-    let captionInput = document.getElementById('captionInput');
-    let x = 0, y = 0, w = 0, h = 0;
-    let xInput = document.getElementById('x-value');
-    let yInput = document.getElementById('y-value');
-    let wInput = document.getElementById('w-value');
-    let hInput = document.getElementById('h-value');
-    let totalPages = 2;
-    let currentPage = 1;
-    let fieldType = document.getElementById("field-type");
+  </div>
+  <script>
+      const crop_btn = document.getElementById('crop-btn');
+      const add_btn = document.getElementById('add-btn');
+      let currentFile = null;
+      let cropper = null;
+      let codeInput = document.getElementById('codeInput');
+      let captionInput = document.getElementById('captionInput');
+      let x = 0, y = 0, w = 0, h = 0;
+      let xInput = document.getElementById('x-value');
+      let yInput = document.getElementById('y-value');
+      let wInput = document.getElementById('w-value');
+      let hInput = document.getElementById('h-value');
+      let totalPages = 2;
+      let currentPage = 1;
+      let fieldType = document.getElementById("field-type");
 
-    for (let i=1; i<=totalPages; i++) {
-        let pageID = "page-" + i;
-        if (i === currentPage) {
-            let lin = document.getElementById(pageID)
-            lin.style.fontWeight = "bold";
-            lin.classList.add("active");
-        }
-        else {
-            $("#"+pageID).removeClass("active");
-        }
-    }
+      for (let i = 1; i <= totalPages; i++) {
+          let pageID = "page-" + i;
+          if (i === currentPage) {
+              let lin = document.getElementById(pageID)
+              lin.style.fontWeight = "bold";
+              lin.classList.add("active");
+          } else {
+              $("#" + pageID).removeClass("active");
+          }
+      }
 
-   function imageLoader(img) {
-        if (cropper instanceof Cropper) {
-            cropper.destroy();
-        }
-        let imgToCrop = document.getElementById("imgToCrop");
-        imgToCrop.src = '';
-        imgToCrop.alt = '';
-        imgToCrop.src = img.src;
-        imgToCrop.alt = img.alt;
-        ext_url = img.alt.split("/");
-        currentFile = ext_url[ext_url.length - 1];
-        cropper = new Cropper(imgToCrop, {
-            autoCropArea: 0.5,
-            viewMode: 1,
-            scalable: false,
-            zoomable: false,
-            movable: false,
-            minCropBoxWidth: 10,
-            minCropBoxHeight: 10,
-        });
-    }
+      function imageLoader(img) {
+          if (cropper instanceof Cropper) {
+              cropper.destroy();
+          }
+          let imgToCrop = document.getElementById("imgToCrop");
+          imgToCrop.src = '';
+          imgToCrop.alt = '';
+          imgToCrop.src = img.src;
+          imgToCrop.alt = img.alt;
+          let ext_url = img.alt.split("/");
+          currentFile = ext_url[ext_url.length - 1];
+          cropper = new Cropper(imgToCrop, {
+              autoCropArea: 0.5,
+              viewMode: 1,
+              scalable: false,
+              zoomable: false,
+              movable: false,
+              minCropBoxWidth: 10,
+              minCropBoxHeight: 5,
+          });
+      }
 
-    function setTempLists(templateLists) {
-        for (var key in templateLists) {
-            var tempTitle = '<td>' + templateLists[key].title + '</td>';
-            var tempPages = '<td>' + templateLists[key].pages + '</td>';
-            var tempOutFormat = '<td>' + templateLists[key].output_format + '</td>';
-            var tempAddButton = '<td><button type="button" value="' + templateLists[key].id + '" class="btn btn-primary" data-bs-dismiss="modal" onclick="getTempID(this)">Select</button></td>';
-            var tempRow = '<tr>' + tempTitle + tempPages + tempOutFormat + tempAddButton + '</tr>';
-            $("#template-lists").append(tempRow);
-        }
-    }
+      function setTempLists(templateLists) {
+          for (let key in templateLists) {
+              let tempTitle = '<td>' + templateLists[key].title + '</td>';
+              let tempPages = '<td>' + templateLists[key].pages + '</td>';
+              let tempOutFormat = '<td>' + templateLists[key].output_format + '</td>';
+              let tempAddButton = '<td><button type="button" value="' + templateLists[key].id + '" class="btn btn-primary" data-bs-dismiss="modal" onclick="getTempID(this)">Select</button></td>';
+              let tempRow = '<tr>' + tempTitle + tempPages + tempOutFormat + tempAddButton + '</tr>';
+              $("#template-lists").append(tempRow);
+          }
+      }
 
-    function setImageLists(pages) {
-        for (let key in pages){
-            let image = document.createElement("img");
-            image.className = "rounded img-thumbnail text-bg-dark";
-            image.src = pages[key];
-            image.alt = pages[key];
-            image.id = "process_image_" + key;
-            image.setAttribute("onclick","imageLoader(this)");
-            let li = document.createElement("li");
-            li.append(image);
-            $("#image-lists").append(li);
-            if (key == 0){
-                imageLoader(image);
-            }
-        }
-    }
+      function setImageLists(pages) {
+          for (let key in pages) {
+              let image = document.createElement("img");
+              image.className = "rounded img-thumbnail text-bg-dark";
+              image.src = pages[key];
+              image.alt = pages[key];
+              image.id = "process_image_" + key;
+              image.setAttribute("onclick", "imageLoader(this)");
+              let li = document.createElement("li");
+              li.append(image);
+              $("#image-lists").append(li);
+              if (key == 0) {
+                  imageLoader(image);
+              }
+          }
+      }
 
-    function setTempCord(dt) {
-        let tableContent = document.getElementById("table-body-content");
-        tableContent.innerHTML = "";
-        for (let key in dt) {
-            let captionCol = "<td>" + dt[key].caption + "</td>";
-            let codeCol = "<td>" + dt[key].code + "</td>";
-            let pageCol = "<td>" + dt[key].page.replace(".jpeg", "") + "</td>";
-            let buttonFindCol = '<td><button class="btn btn-secondary" value="' + dt[key].id + '" type="button" onclick="visualCord(this)"><i class="bi bi-binoculars-fill"></i></button></td>';
-            let buttonCol = '<td><button class="btn btn-secondary" value="' + dt[key].id + '" type="button" onclick="deleteCord(this)"><i class="bi bi-trash-fill"></i></button></td>';
+      function setTempCord(dt) {
+          let tableContent = document.getElementById("table-body-content");
+          tableContent.innerHTML = "";
+          for (let key in dt) {
+              let captionCol = "<td>" + dt[key].caption + "</td>";
+              let codeCol = "<td>" + dt[key].code + "</td>";
+              let pageCol = "<td>" + dt[key].page.replace(".jpeg", "") + "</td>";
+              let buttonFindCol = '<td><button class="btn btn-secondary" value="' + dt[key].id + '" type="button" onclick="visualCord(this)"><i class="bi bi-binoculars-fill"></i></button></td>';
+              let buttonCol = '<td><button class="btn btn-secondary" value="' + dt[key].id + '" type="button" onclick="deleteCord(this)"><i class="bi bi-trash-fill"></i></button></td>';
 
-            let tableRow = document.createElement("tr");
+              let tableRow = document.createElement("tr");
 
-            tableRow.innerHTML += captionCol;
-            tableRow.innerHTML += codeCol;
-            tableRow.innerHTML += pageCol;
-            tableRow.innerHTML += buttonFindCol;
-            tableRow.innerHTML += buttonCol;
+              tableRow.innerHTML += captionCol;
+              tableRow.innerHTML += codeCol;
+              tableRow.innerHTML += pageCol;
+              tableRow.innerHTML += buttonFindCol;
+              tableRow.innerHTML += buttonCol;
 
-            tableContent.appendChild(tableRow);
-        }
-        xInput.value = "X : ";
-        yInput.value = "Y : ";
-        wInput.value = "Width : ";
-        hInput.value = "Height : ";
-        codeInput.value = "";
-        captionInput.value = "";
-    }
+              tableContent.appendChild(tableRow);
+          }
+          xInput.value = "X : ";
+          yInput.value = "Y : ";
+          wInput.value = "Width : ";
+          hInput.value = "Height : ";
+          codeInput.value = "";
+          captionInput.value = "";
+      }
 
-    crop_btn.addEventListener('click', ()=>{
-        let cropperData = cropper.getData();
-        x = Math.round(cropperData.x);
-        y = Math.round(cropperData.y);
-        w = Math.round(cropperData.width);
-        h = Math.round(cropperData.height);
+      crop_btn.addEventListener('click', () => {
+          let cropperData = cropper.getData("true");
+          console.log(cropperData);
+          console.log("----------------------------");
+          x = Math.round(cropperData.x);
+          y = Math.round(cropperData.y);
+          w = Math.round(cropperData.width);
+          h = Math.round(cropperData.height);
 
-        xInput.value = "X : " + x;
-        yInput.value = "Y : " + y;
-        wInput.value = "Width : " + w;
-        hInput.value = "Height : " + h;
-    });
+          xInput.value = "X : " + x;
+          yInput.value = "Y : " + y;
+          wInput.value = "Width : " + w;
+          hInput.value = "Height : " + h;
+      });
 
-    add_btn.addEventListener('click', ()=>{
-        let fieldType = document.getElementById("field-type");
-        let inFormat = document.getElementById("inFormat");
-        let outFormat = document.getElementById("outFormat");
-        let temp_id = document.getElementById("temp-id").value
-        let datas =[{
-            code: codeInput.value,
-            caption: captionInput.value,
-            page: currentFile,
-            cord: {
-                x: x,
-                y: y,
-                width: w,
-                height: h
-            },
-            field_type: fieldType.value,
-            in_date_format: inFormat.value,
-            out_date_format: outFormat.value,
-        }]
-        $.ajax({
-            type: "POST",
-            url: "{% url 'create_temp_coord' %}",
-            data: {
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                data: JSON.stringify(datas),
-                temp_id: temp_id
-            },
-            success: function(response){
-                let dt = response.temp_cord
-                setTempCord(dt);
-                fieldType.value = 0;
-                inFormat.value = "";
-                outFormat.value = "";
-                document.getElementById("inCol").style.display = "none";
-                document.getElementById("outCol").style.display = "none";
-            },
-            error: function(response){
-                console.log(response);
-            }
-        });
-    });
+      add_btn.addEventListener('click', () => {
+          let fieldType = document.getElementById("field-type");
+          let inFormat = document.getElementById("inFormat");
+          let outFormat = document.getElementById("outFormat");
+          let temp_id = document.getElementById("temp-id").value
+          let detailField;
+          let detailFieldCheckBox = document.getElementById("detailField")
 
-    function deleteCord(cord) {
-        $.ajax({
-            type: "POST",
-            url: "{% url 'delete_cord' %}",
-            data: {
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                delete_id: cord.value
-            },
-            success: function(response) {
-                let dt = response.temp_cord
-                setTempCord(dt);
-            },
-            error: function(response) {
-                console.log(response);
-            }
-        });
-    }
+          detailField = detailFieldCheckBox.checked === true;
+          console.log(detailField)
+          let datas = [{
+              code: codeInput.value,
+              caption: captionInput.value,
+              page: currentFile,
+              cord: {
+                  x: x,
+                  y: y,
+                  width: w,
+                  height: h
+              },
+              field_type: fieldType.value,
+              in_date_format: inFormat.value,
+              out_date_format: outFormat.value,
+              detail_field: detailField
+          }]
+          $.ajax({
+              type: "POST",
+              url: "{% url 'create_temp_coord' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  data: JSON.stringify(datas),
+                  temp_id: temp_id
+              },
+              success: function (response) {
+                  let dt = response.temp_cord
+                  setTempCord(dt);
+                  fieldType.value = 0;
+                  inFormat.value = "";
+                  outFormat.value = "";
+                  document.getElementById("inCol").style.display = "none";
+                  document.getElementById("outCol").style.display = "none";
+                  document.getElementById("detailField").checked = false;
+              },
+              error: function (response) {
+                  console.log(response);
+              }
+          });
+      });
 
-    $("#add-template").click(function(e) {
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: "{% url 'get_pdf_temps' %}",
-            data: {
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-            },
-            success: function(response) {
-                $("#template-lists").empty();
-                let templateLists = response.templates;
-                setTempLists(templateLists);
+      function deleteCord(cord) {
+          $.ajax({
+              type: "POST",
+              url: "{% url 'delete_cord' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  delete_id: cord.value
+              },
+              success: function (response) {
+                  let dt = response.temp_cord
+                  setTempCord(dt);
+              },
+              error: function (response) {
+                  console.log(response);
+              }
+          });
+      }
 
-            },
-            error: function(response) {
-                alert("Unable to load data");
-            }
-        });
-    });
+      $("#add-template").click(function (e) {
+          e.preventDefault();
+          $.ajax({
+              type: "POST",
+              url: "{% url 'get_pdf_temps' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+              },
+              success: function (response) {
+                  $("#template-lists").empty();
+                  let templateLists = response.templates;
+                  setTempLists(templateLists);
 
-    function getTempID(addBtn) {
-        $.ajax({
-            type: "POST",
-            url: "{% url 'get_temp_details' %}",
-            data: {
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                temp_id: addBtn.value
-            },
-            success: function(response){
-                document.getElementById("temp-name").innerHTML = "Selected Template : " + response.temp_title;
-                document.getElementById("temp-id").value = addBtn.value;
-                $("#image-lists").empty();
-                let imgToCrop = document.getElementById("imgToCrop");
-                imgToCrop.src = '';
-                imgToCrop.alt = '';
-                if (cropper instanceof Cropper) {
-                    cropper.destroy();
-                }
-                
-                let pages = response.pdf_pages
-                setImageLists(pages);
-                let dt = response.temp_cord
-                setTempCord(dt);
-                document.getElementById("preview-data").style.display = "block";
-            },
-            error: function(response){
-                console.log(response);
-            }
-        });
-    }
-    $("#save-template").click(function(e) {
-        e.preventDefault();
-        let tempName = document.getElementById("template-name");
-        let tempPages = document.getElementById("template-total-pages");
-        let tempOut = document.getElementById("template-output");
-        $.ajax({
-            type: "POST",
-            url: "{% url 'create_template' %}",
-            data: {
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                temp_name: tempName.value,
-                temp_pages: tempPages.value,
-                temp_out_format: tempOut.value
-            },
-            success: function(response){
-                let imgToCrop = document.getElementById("imgToCrop");
-                imgToCrop.src = '';
-                imgToCrop.alt = '';
-                if (cropper instanceof Cropper) {
-                    cropper.destroy();
-                }
-                $("#image-lists").empty();
-                let tableContent = document.getElementById("table-body-content");
-                tableContent.innerHTML = "";
-                tempName.value = ""
-                tempPages.value = ""
-                tempOut.value = ""
-                document.getElementById("temp-name").innerHTML = "Selected Template : " + response.pdf_template;
-                document.getElementById("temp-id").value = response.temp_id;
-                document.getElementById("preview-data").style.display = "none";
-            },
-            error: function(response){
-                console.log(response);
-            }
-        });
-    });
+              },
+              error: function (response) {
+                  console.log(response)
+              }
+          });
+      });
 
-    $('form#temp-form').submit(function(e) {
-        e.preventDefault();
-        document.getElementById("image-lists-spinner").style.display = "block";
-        document.getElementById("image-crop-spinner").style.display = "block";
-        let formData = new FormData(this);
-        $.ajax({
-            type: "POST",
-            url: "{% url 'update_template' %}",
-            data: formData,
-            success: function(response){
-                document.getElementById("image-lists-spinner").style.display = "none";
-                document.getElementById("image-crop-spinner").style.display = "none";
-                $("#image-lists").empty();
-                let pages = response.pdf_pages;
-                setImageLists(pages);
-                document.getElementById("preview-data").style.display = "block";
-            },
-            error: function(response){
-                console.log(response);
-            },
-            cache: false,
-            processData: false,
-            contentType: false,
-        });
-    });
-    function visualCord(id){
-        $.ajax({
-            type: "POST",
-            url: "{% url 'get_cord_values' %}",
-            data: {
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                view_id: id.value
-            },
-            success: function(response) {
-                let data = response.data;
-                let page = parseInt(response.page) - 1;
-                let image = document.getElementById("process_image_" + page);
-                {#imageLoader(image);#}
-                {#console.log("Test");#}
-                cropper.setData(data);
-            },
-            error: function(response) {
-                console.log(response);
-            }
-        });
-    }
+      function getTempID(addBtn) {
+          $.ajax({
+              type: "POST",
+              url: "{% url 'get_temp_details' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  temp_id: addBtn.value
+              },
+              success: function (response) {
+                  document.getElementById("temp-name").innerHTML = "Selected Template : " + response.temp_title;
+                  document.getElementById("temp-id").value = addBtn.value;
+                  $("#image-lists").empty();
+                  let imgToCrop = document.getElementById("imgToCrop");
+                  imgToCrop.src = '';
+                  imgToCrop.alt = '';
+                  if (cropper instanceof Cropper) {
+                      cropper.destroy();
+                  }
 
-    $("#preview-data").click(function (e) {
-        e.preventDefault();
-        document.getElementById("preview-spinner").style.display = "block";
-        $("#preview-lists").empty();
-        $.ajax({
-            type: "POST",
-            url: "{% url 'preview_data' %}",
-            data: {
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                temp_id: document.getElementById("temp-id").value
-            },
-            success: function (response) {
-                let data = response.data;
-                for (let key in data) {
-                    {#let imgTag = document.createElement("img");#}
-                    {#imgTag.src = data[key].path;#}
-                    {#imgTag.className = "card-img-top";#}
+                  let pages = response.pdf_pages
+                  setImageLists(pages);
+                  let dt = response.temp_cord
+                  setTempCord(dt);
+                  document.getElementById("preview-data").style.display = "block";
+              },
+              error: function (response) {
+                  console.log(response);
+              }
+          });
+      }
 
-                    let cardHeader = document.createElement("h5");
-                    cardHeader.className = "card-header";
-                    cardHeader.innerText = data[key].code;
+      $("#save-template").click(function (e) {
+          e.preventDefault();
+          let tempName = document.getElementById("template-name");
+          let tempPages = document.getElementById("template-total-pages");
+          let tempOut = document.getElementById("template-output");
+          console.log(tempName);
+          console.log(tempPages);
+          $.ajax({
+              type: "POST",
+              url: "{% url 'create_template' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  temp_name: tempName.value,
+                  temp_pages: tempPages.value,
+                  temp_out_format: tempOut.value
+              },
+              success: function (response) {
+                  let imgToCrop = document.getElementById("imgToCrop");
+                  imgToCrop.src = '';
+                  imgToCrop.alt = '';
+                  if (cropper instanceof Cropper) {
+                      cropper.destroy();
+                  }
+                  $("#image-lists").empty();
+                  let tableContent = document.getElementById("table-body-content");
+                  tableContent.innerHTML = "";
+                  tempName.value = ""
+                  {#tempPages.value = ""#}
+                  tempOut.value = ".835"
+                  document.getElementById("temp-name").innerHTML = "Selected Template : " + response.pdf_template;
+                  document.getElementById("temp-id").value = response.temp_id;
+                  document.getElementById("preview-data").style.display = "none";
+              },
+              error: function (response) {
+                  console.log(response);
+              }
+          });
+      });
 
-                    let textTag = document.createElement("p");
-                    textTag.className = "card-text";
-                    textTag.innerText = data[key].text;
+      $('form#temp-form').submit(function (e) {
+          e.preventDefault();
+          document.getElementById("image-lists-spinner").style.display = "block";
+          document.getElementById("image-crop-spinner").style.display = "block";
+          let formData = new FormData(this);
+          $.ajax({
+              type: "POST",
+              url: "{% url 'update_template' %}",
+              data: formData,
+              success: function (response) {
+                  document.getElementById("image-lists-spinner").style.display = "none";
+                  document.getElementById("image-crop-spinner").style.display = "none";
+                  $("#image-lists").empty();
+                  let pages = response.pdf_pages;
+                  setImageLists(pages);
+                  document.getElementById("preview-data").style.display = "block";
+              },
+              error: function (response) {
+                  console.log(response);
+              },
+              cache: false,
+              processData: false,
+              contentType: false,
+          });
+      });
 
-                    let cardBody = document.createElement("div");
-                    cardBody.className = "card-body";
-                    cardBody.append(textTag);
+      function visualCord(id) {
+          $.ajax({
+              type: "POST",
+              url: "{% url 'get_cord_values' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  view_id: id.value
+              },
+              success: function (response) {
+                  let data = response.data;
+                  let page = parseInt(response.page) - 1;
+                  let image = document.getElementById("process_image_" + page);
+                  {#imageLoader(image);#}
+                  {#console.log("Test");#}
+                  cropper.setData(data);
+              },
+              error: function (response) {
+                  console.log(response);
+              }
+          });
+      }
 
-                    let card = document.createElement("div");
-                    card.className = "card border-dark mb-3";
-                    card.style.width = "100%";
-                    {#card.append(imgTag);#}
-                    card.append(cardHeader);
-                    card.append(cardBody);
+      $("#preview-data").click(function (e) {
+          e.preventDefault();
+          document.getElementById("preview-spinner").style.display = "block";
+          $("#preview-lists").empty();
+          $.ajax({
+              type: "POST",
+              url: "{% url 'preview_data' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  temp_id: document.getElementById("temp-id").value
+              },
+              success: function (response) {
+                  let data = response.data;
+                  for (let key in data) {
+                      let imgTag = document.createElement("img");
+                      imgTag.src = data[key].path;
+                      imgTag.className = "card-img-top";
 
-                    let colTag = document.createElement("div");
-                    colTag.className = "col";
-                    colTag.append(card);
-                    document.getElementById("preview-spinner").style.display = "none";
-                    $("#preview-lists").append(colTag);
-                }
-            },
-            error: function (response) {
-                console.log(response)
-            }
-        })
-    });
+                      let cardHeader = document.createElement("h5");
+                      cardHeader.className = "card-header";
+                      cardHeader.innerText = data[key].code;
 
-    $(function () {
-        $("#field-type").change(function () {
-            if (fieldType.value === "4") {
-                $("#inCol").show();
-                $("#outCol").show();
-            } else {
-                $("#inCol").hide();
-                $("#outCol").hide();
-            }
-        });
-    });
-</script>
+                      let textTag = document.createElement("p");
+                      textTag.className = "card-text";
+                      textTag.innerText = data[key].text;
+
+                      let cardBody = document.createElement("div");
+                      cardBody.className = "card-body";
+                      cardBody.append(textTag);
+
+                      let card = document.createElement("div");
+                      card.className = "card border-dark mb-3";
+                      card.style.width = "100%";
+                      card.append(imgTag);
+                      card.append(cardHeader);
+                      card.append(cardBody);
+
+                      let colTag = document.createElement("div");
+                      colTag.className = "col";
+                      colTag.append(card);
+                      document.getElementById("preview-spinner").style.display = "none";
+                      $("#preview-lists").append(colTag);
+                  }
+              },
+              error: function (response) {
+                  console.log(response)
+              }
+          })
+      });
+
+      $(function () {
+          $("#field-type").change(function () {
+              if (fieldType.value === "4") {
+                  $("#inCol").show();
+                  $("#outCol").show();
+              } else {
+                  $("#inCol").hide();
+                  $("#outCol").hide();
+              }
+          });
+      });
+
+      $("#heightCaptureButton").click(function () {
+          let cropperData = cropper.getData();
+          h = Math.round(cropperData.y);
+          let detail_field = document.getElementById("detailField").checked;
+          let dt = 0;
+          if (detail_field === true) {
+              dt = 1;
+          }
+          $.ajax({
+              type: "POST",
+              url: "{% url 'height_difference' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  temp_id: document.getElementById("temp-id").value,
+                  height: h,
+                  {#total_rows: document.getElementById("totalRows").value,#}
+                  {#detail_field: dt#}
+              },
+              success: function (response) {
+                  document.getElementById("hd-value").value = "Height Difference : " + response.height_diff
+              },
+              error: function (response) {
+                  console.log(response)
+              }
+          })
+      });
+
+      document.getElementById("captureHeightCheck").addEventListener("click", function () {
+          if (this.checked === true) {
+              document.getElementById("heightCaptureButton").style.display = "block";
+              document.getElementById("hd-value").style.display = "block";
+          } else {
+              document.getElementById("heightCaptureButton").style.display = "none";
+              document.getElementById("hd-value").style.display = "none";
+          }
+       });
+  </script>
 {% endblock content %}

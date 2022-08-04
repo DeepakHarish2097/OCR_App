@@ -1,75 +1,90 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
+  <div class="container">
     <form id="temp-form" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <h3 class="mt-3">Process</h3>
-        <div class="row g-3 mt-2">
-            <div class="col-sm-7">
-                <div class="row">
-                    <div class="col-auto">
-                        <button type="button" class="btn btn-primary" id="add-template" data-bs-toggle="modal" data-bs-target="#template-table">Select Template</button>
-                    </div>
-                    <div class="col">
-                        <p id="temp-name"></p>
-                      <input type="text" name="temp_id" style="display: none;" id="temp-id">
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm">
-                <input class="form-control form-control-sm" name="pdf_file" id="pdfInput" type="file">
-                <label for="pdfInput" class="form-label">PDF Upload</label>
+      {% csrf_token %}
+      <h3 class="mt-3">Process</h3>
+      <div class="row g-3 mt-2">
+        <div class="col-sm-7">
+          <div class="row">
+            <div class="col-auto">
+              <button type="button" class="btn btn-primary" id="add-template" data-bs-toggle="modal" data-bs-target="#template-table">Select Template</button>
             </div>
             <div class="col">
-                <div class="row">
-                    <div class="col-auto">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#process-modal">Process</button>
-                    </div>
-                    <div class="col-sm">
-                        <button type="button" id="generate-btn" class="btn btn-outline-primary" style="display: none;" data-bs-toggle="modal" data-bs-target="#generate-file-modal">Generate Output</button>
-                    </div>
-                </div>
+              <p id="temp-name"></p>
+              <input type="text" name="temp_id" style="display: none;" id="temp-id">
             </div>
-        </div>
-        <div class="modal fade" id="process-modal" tabindex="-1" aria-labelledby="processModal" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Process</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <p>Are you sure do you want to process the uploaded file?</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                <button type="submit" id="post-data" class="btn btn-primary" data-bs-dismiss="modal">Yes</button>
-              </div>
+            <div class="col-auto" id="upload-col">
+              <label for="pdfInput" class="form-label">PDF Upload: </label>
+              <input class="form-control form-control-sm" style="width: 80%" name="pdf_file" id="pdfInput" type="file">
+            </div>
+            <div class="col-auto" id="upload-btn-col" style="display: none;">
+              <button type="button" class="btn btn-outline-primary" id="upload-btn">Upload File</button>
             </div>
           </div>
         </div>
-        <div class="modal fade" id="generate-file-modal" tabindex="-1" aria-labelledby="generateModal" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Generate Output</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <p>Are you sure do you want to generate the output file?</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                <a type="button" id="download-file" class="btn btn-primary" data-bs-dismiss="modal">Yes</a>
-              </div>
-            </div>
-          </div>
-        </div>
-    </form>
-</div>
 
-<div class="modal-lg modal fade" id="template-table" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="templateTableLabel" aria-hidden="true">
+        <div class="col-auto" id="line-items-col" style="display: none;">
+          <label for="totalRows" class="form-label">Total Line Items: </label>
+          <input type="number" style="width: 60%" name="total_rows" class="form-control" id="totalRows">
+        </div>
+
+        <div class="col-auto">
+          <div class="row">
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary" id="open-button">
+                Open
+              </button>
+              <button type="button" style="display: none;" id="post-process" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#process-modal">
+                Process
+              </button>
+            </div>
+            <div class="col-sm">
+              <button type="button" id="generate-btn" class="btn btn-outline-primary" style="display: none;" data-bs-toggle="modal" data-bs-target="#generate-file-modal">Generate Output</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="process-modal" tabindex="-1" aria-labelledby="processModal" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Process</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure do you want to process the uploaded file?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+              <button type="button" id="post-data" class="btn btn-primary" data-bs-dismiss="modal">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="generate-file-modal" tabindex="-1" aria-labelledby="generateModal" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Generate Output</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure do you want to generate the output file?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+              <a type="button" id="download-file" class="btn btn-primary" data-bs-dismiss="modal">Yes</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-lg modal fade" id="template-table" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+       aria-labelledby="templateTableLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -77,246 +92,296 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Template Name</th>
-                        <th scope="col">Pages</th>
-                        <th scope="col">Output Format</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="template-lists" style="height: 100px; overflow-y: auto; overflow-x: hidden;">
-                </tbody>
-            </table>
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th scope="col">Template Name</th>
+              <th scope="col">Pages</th>
+              <th scope="col">Output Format</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody id="template-lists" style="height: 100px; overflow-y: auto; overflow-x: hidden;">
+            </tbody>
+          </table>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
-</div>
-<div class="row">
+  </div>
+  <div class="row mt-2">
     <div class="col-2" style="background-color: #818181;">
-        <div class="d-flex justify-content-center m-2">
-          <div class="spinner-border" role="status" id="image-lists-spinner" style="display: none">
-            <span class="visually-hidden">Loading...</span>
-          </div>
+      <div class="d-flex justify-content-center m-2">
+        <div class="spinner-border" role="status" id="image-lists-spinner" style="display: none">
+          <span class="visually-hidden">Loading...</span>
         </div>
-        <ol id="image-lists">
-        </ol>
+      </div>
+      <ol id="image-lists">
+      </ol>
     </div>
     <div class="col-10" style="background-color: #f2f2f2;">
-        <div class="container" style="padding-top: 10px;">
-            <div class="row">
-                <div class="col-6">
-                  <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-primary" role="status" id="image-crop-spinner" style="display: none">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                  </div>
-                    <img id="imgToCrop" class="img-fluid" src="" alt="">
-                </div>
-              <div class="col-4">
-                <div class="d-flex justify-content-center">
-                  <div class="spinner-border text-primary" role="status" id="cards-lists-spinner" style="display: none">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-                <div id="cards-list" style="margin-left: 10px;">
-                </div>
+      <div class="container" style="padding-top: 10px;">
+        <div class="row">
+          <div class="col-6">
+            <div class="d-flex justify-content-center">
+              <div class="spinner-border text-primary" role="status" id="image-crop-spinner" style="display: none">
+                <span class="visually-hidden">Loading...</span>
               </div>
             </div>
+            <img id="imgToCrop" class="img-fluid" src="" alt="">
+          </div>
+          <div class="col-4">
+            <div class="d-flex justify-content-center">
+              <div class="spinner-border text-primary" role="status" id="cards-lists-spinner" style="display: none">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <div id="cards-list" style="margin-left: 10px;">
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-<script>
-    let downloadBtn = document.getElementById("download-file");
-    let generateBtn = document.getElementById("generate-btn");
-    let genText = null;
-    let currentPdfProcessId = null;
-    let totalPages = 2;
-    let currentPage = 2
+  </div>
+  <script>
+      let downloadBtn = document.getElementById("download-file");
+      let generateBtn = document.getElementById("generate-btn");
+      let genText = null;
+      let currentPdfProcessId = null;
+      let totalPages = 2;
+      let currentPage = 2
 
-    for (let i=1; i<=totalPages; i++) {
-        let pageID = "page-" + i;
-        if (i === currentPage) {
-            let lin = document.getElementById(pageID)
-            lin.style.fontWeight = "bold";
-            lin.classList.add("active");
-        }
-        else {
-            $("#"+pageID).removeClass("active");
-        }
-    }
+      for (let i = 1; i <= totalPages; i++) {
+          let pageID = "page-" + i;
+          if (i === currentPage) {
+              let lin = document.getElementById(pageID)
+              lin.style.fontWeight = "bold";
+              lin.classList.add("active");
+          } else {
+              $("#" + pageID).removeClass("active");
+          }
+      }
 
-    function setTempLists(templateLists) {
-        for (let key in templateLists) {
-            let tempTitle = '<td>' + templateLists[key].title + '</td>';
-            let tempPages = '<td>' + templateLists[key].pages + '</td>';
-            let tempOutFormat = '<td>' + templateLists[key].output_format + '</td>';
-            let tempAddButton = '<td><button type="button" value="' + templateLists[key].id + '" class="btn btn-primary" data-bs-dismiss="modal" onclick="getTempID(this)">Select</button></td>';
-            let tempRow = '<tr>' + tempTitle + tempPages + tempOutFormat + tempAddButton + '</tr>';
-            $("#template-lists").append(tempRow);
-        }
-    }
+      function setTempLists(templateLists) {
+          for (let key in templateLists) {
+              let tempTitle = '<td>' + templateLists[key].title + '</td>';
+              let tempPages = '<td>' + templateLists[key].pages + '</td>';
+              let tempOutFormat = '<td>' + templateLists[key].output_format + '</td>';
+              let tempAddButton = '<td><button type="button" value="' + templateLists[key].id + '" class="btn btn-primary" data-bs-dismiss="modal" onclick="getTempID(this)">Select</button></td>';
+              let tempRow = '<tr>' + tempTitle + tempPages + tempOutFormat + tempAddButton + '</tr>';
+              $("#template-lists").append(tempRow);
+          }
+      }
 
-    $("#add-template").click(function(e) {
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: "{% url 'get_pdf_temps' %}",
-            data: {
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-            },
-            success: function(response) {
-                $("#template-lists").empty();
-                let templateLists = response.templates;
-                setTempLists(templateLists);
-            },
-            error: function(response) {
-                alert("Unable to load data");
-            }
-        });
-    });
+      $("#add-template").click(function (e) {
+          e.preventDefault();
+          $.ajax({
+              type: "POST",
+              url: "{% url 'get_pdf_temps' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+              },
+              success: function (response) {
+                  $("#template-lists").empty();
+                  let templateLists = response.templates;
+                  setTempLists(templateLists);
+              },
+              error: function (response) {
+                  alert("Unable to load data");
+              }
+          });
+      });
 
-    function getTempID(addBtn) {
-        document.getElementById("cards-list").innerHTML = "";
-        document.getElementById("image-lists").innerHTML = "";
-        document.getElementById("imgToCrop").src = "";
-        document.getElementById("imgToCrop").alt = "";
-        $.ajax({
-            type: "POST",
-            url: "{% url 'get_temp_details' %}",
-            data: {
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                temp_id: addBtn.value
-            },
-            success: function(response){
-                document.getElementById("temp-name").innerHTML = "Selected Template : " + response.temp_title;
-                document.getElementById("temp-id").value = addBtn.value;
-                generateBtn.style.display = "none";
-            },
-            error: function(response){
-                console.log(response);
-            }
-        });
-    }
+      function getTempID(addBtn) {
+          document.getElementById("cards-list").innerHTML = "";
+          document.getElementById("image-lists").innerHTML = "";
+          document.getElementById("imgToCrop").src = "";
+          document.getElementById("imgToCrop").alt = "";
+          $.ajax({
+              type: "POST",
+              url: "{% url 'get_temp_details' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  temp_id: addBtn.value
+              },
+              success: function (response) {
+                  document.getElementById("temp-name").innerHTML = "Selected Template : " + response.temp_title;
+                  document.getElementById("temp-id").value = addBtn.value;
+                  generateBtn.style.display = "none";
+                  document.getElementById("line-items-col").style.display = "none";
+                  document.getElementById("post-process").style.display = "none";
+                  document.getElementById("open-button").style.display = "block";
+              },
+              error: function (response) {
+                  console.log(response);
+              }
+          });
+      }
 
-    function imageLoader(img) {
-        let imgToCrop = document.getElementById("imgToCrop");
-        imgToCrop.src = '';
-        imgToCrop.alt = '';
-        imgToCrop.src = img.src;
-        imgToCrop.alt = img.alt;
-    }
+      function imageLoader(img) {
+          let imgToCrop = document.getElementById("imgToCrop");
+          imgToCrop.src = '';
+          imgToCrop.alt = '';
+          imgToCrop.src = img.src;
+          imgToCrop.alt = img.alt;
+      }
 
-    function setImageLists(pages) {
-        for (let key in pages){
-            let imgs = document.createElement("img");
-            imgs.className = "rounded img-thumbnail text-bg-dark";
-            imgs.src = pages[key];
-            imgs.alt = pages[key];
-            imgs.setAttribute("onclick","imageLoader(this)");
-            let li = document.createElement("li");
-            li.append(imgs);
-            $("#image-lists").append(li);
-            if (key == 0){
-                imageLoader(imgs);
-            }
-        }
-    }
+      function setImageLists(pages) {
+          for (let key in pages) {
+              let imgs = document.createElement("img");
+              imgs.className = "rounded img-thumbnail text-bg-dark";
+              imgs.src = pages[key];
+              imgs.alt = pages[key];
+              imgs.setAttribute("onclick", "imageLoader(this)");
+              let li = document.createElement("li");
+              li.append(imgs);
+              $("#image-lists").append(li);
+              if (key == 0) {
+                  imageLoader(imgs);
+              }
+          }
+      }
 
-    $('form#temp-form').submit(function(e) {
-        e.preventDefault();
-        document.getElementById("image-lists-spinner").style.display = "block";
-        document.getElementById("image-crop-spinner").style.display = "block";
-        document.getElementById("cards-lists-spinner").style.display = "block";
-        let formData = new FormData(this);
-        document.getElementById("cards-list").innerHTML = "";
-        $("#image-lists").empty();
-        $.ajax({
-            type: "POST",
-            url: "{% url 'process_images' %}",
-            data: formData,
-            success: function(response){
-                document.getElementById("image-lists-spinner").style.display = "none";
-                document.getElementById("image-crop-spinner").style.display = "none";
-                document.getElementById("cards-lists-spinner").style.display = "none";
-                let pages = response.img_url;
-                genText = response.data;
-                currentPdfProcessId = response.pdf_id;
-                setImageLists(pages);
-                for (let key in genText) {
-                    let code = genText[key].code;
-                    let page = genText[key].page;
-                    let caption = genText[key].caption;
-                    let text = genText[key].text;
+      $('form#temp-form').submit(function (e) {
+          e.preventDefault();
+          document.getElementById("image-lists-spinner").style.display = "block";
+          document.getElementById("image-crop-spinner").style.display = "block";
+          let formData = new FormData(this);
+          document.getElementById("cards-list").innerHTML = "";
+          $("#image-lists").empty();
+          document.getElementById("imgToCrop").style.display = "none";
+          $.ajax({
+              type: "POST",
+              url: "{% url 'open_images' %}",
+              data: formData,
+              success: function (response) {
+                  document.getElementById("image-lists-spinner").style.display = "none";
+                  document.getElementById("image-crop-spinner").style.display = "none";
+                  let pages = response.img_url;
 
-                    let captionTag = document.createElement("h5");
-                    captionTag.innerHTML = caption;
-                    captionTag.className = "card-title";
-                    
-                    let codeTag = document.createElement("h6");
-                    codeTag.innerHTML = "Code : " + code;
-                    codeTag.className = "card-subtitle";
+                  currentPdfProcessId = response.pdf_id;
+                  setImageLists(pages);
+                  document.getElementById("imgToCrop").style.display = "block";
+                  document.getElementById("post-process").style.display = "block";
+                  document.getElementById("open-button").style.display = "none";
+                  document.getElementById("line-items-col").style.display = "block";
+                  document.getElementById("upload-col").style.display = "none";
+                  document.getElementById("upload-btn-col").style.display = "block";
+              },
+              error: function (response) {
+                  console.log(response);
+              },
+              cache: false,
+              processData: false,
+              contentType: false,
+          });
+      });
 
-                    let pageTag = document.createElement("h6");
-                    pageTag.innerHTML = "Page No : " + page;
-                    pageTag.className = "card-subtitle mb-2";
+      downloadBtn.addEventListener("click", function (e) {
+          for (let key in genText) {
+              genText[key].text = document.getElementById("input_" + key).value;
+          }
+          console.log(JSON.stringify(genText));
+          e.preventDefault();
+          $.ajax({
+              type: "POST",
+              url: "{% url 'set_data' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  temp_id: currentPdfProcessId,
+                  data: JSON.stringify(genText)
+              },
+              success: function (response) {
+                  location = "/download/" + currentPdfProcessId;
+              },
+              error: function (response) {
+                  console.log("Unable to load data");
+              }
+          });
+      });
 
-                    let textTag = document.createElement("textarea");
-                    textTag.value = text;
-                    textTag.className = "form-control";
-                    textTag.id = "input_" + key;
-                    textTag.style.height = "20px";
+      document.getElementById("post-data").addEventListener("click", function () {
+          document.getElementById("cards-lists-spinner").style.display = "block";
+          document.getElementById("image-lists-spinner").style.display = "block";
+          document.getElementById("image-crop-spinner").style.display = "block";
+          $("#image-lists").empty();
+          document.getElementById("imgToCrop").style.display = "none";
+          let temp_id = document.getElementById("temp-id").value;
+          document.getElementById("cards-list").innerHTML = "";
+          $.ajax({
+              type: "POST",
+              url: "{% url 'process_images' %}",
+              data: {
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  temp_id: temp_id,
+                  process_id: currentPdfProcessId,
+                  total_rows: document.getElementById("totalRows").value
+              },
+              success: function (response) {
+                  document.getElementById("cards-lists-spinner").style.display = "none";
+                  document.getElementById("image-lists-spinner").style.display = "none";
+                  document.getElementById("image-crop-spinner").style.display = "none";
+                  document.getElementById("imgToCrop").style.display = "block";
+                  genText = response.data;
+                  let pages = response.img_url;
+                  setImageLists(pages);
+                  document.getElementById("imgToCrop").style.display = "block";
+                  for (let key in genText) {
+                      let code = genText[key].code;
+                      let page = genText[key].page;
+                      let caption = genText[key].caption;
+                      let text = genText[key].text;
 
-                    let cardBody = document.createElement("div");
-                    cardBody.className = "card-body";
-                    cardBody.append(captionTag);
-                    cardBody.append(codeTag);
-                    cardBody.append(pageTag);
-                    cardBody.append(textTag);
+                      let captionTag = document.createElement("h5");
+                      captionTag.innerHTML = caption;
+                      captionTag.className = "card-title";
 
-                    let card = document.createElement("div");
-                    card.className = "card mb-2";
-                    card.style.width = "100%"
-                    card.append(cardBody);
+                      let codeTag = document.createElement("h6");
+                      codeTag.innerHTML = "Code : " + code;
+                      codeTag.className = "card-subtitle";
 
-                    $("#cards-list").append(card);
-                }
-                generateBtn.style.display = "block";
-            },
-            error: function(response){
-                console.log(response);
-            },
-            cache: false,
-            processData: false,
-            contentType: false,
-        });
-    });
+                      let pageTag = document.createElement("h6");
+                      pageTag.innerHTML = "Page No : " + page;
+                      pageTag.className = "card-subtitle mb-2";
 
-    downloadBtn.addEventListener("click", function(e) {
-        for (let key in genText){
-            genText[key].text = document.getElementById("input_" + key).value;
-        }
-        console.log(JSON.stringify(genText));
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: "{% url 'set_data' %}",
-            data: {
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                temp_id: currentPdfProcessId,
-                data: JSON.stringify(genText)
-            },
-            success: function(response) {
-                location = "/download/" + currentPdfProcessId;
-            },
-            error: function(response) {
-                console.log("Unable to load data");
-            }
-        });
-    });
-</script>
+                      let textTag = document.createElement("textarea");
+                      textTag.value = text;
+                      textTag.className = "form-control";
+                      textTag.id = "input_" + key;
+                      textTag.style.height = "20px";
+
+                      let cardBody = document.createElement("div");
+                      cardBody.className = "card-body";
+                      cardBody.append(captionTag);
+                      cardBody.append(codeTag);
+                      cardBody.append(pageTag);
+                      cardBody.append(textTag);
+
+                      let card = document.createElement("div");
+                      card.className = "card mb-2";
+                      card.style.width = "100%"
+                      card.append(cardBody);
+
+                      $("#cards-list").append(card);
+                   }
+                  generateBtn.style.display = "block";
+              },
+              error: function (response) {
+                  console.log(response);
+              }
+          });
+      });
+
+      document.getElementById("upload-btn").addEventListener("click", function () {
+          document.getElementById("post-process").style.display = "none";
+          document.getElementById("open-button").style.display = "block";
+          document.getElementById("generate-btn").style.display = "none";
+          document.getElementById("line-items-col").style.display = "none";
+          document.getElementById("upload-col").style.display = "block";
+          document.getElementById("pdfInput").value = "";
+          document.getElementById("upload-btn-col").style.display = "none";
+      })
+  </script>
 {% endblock content %}
